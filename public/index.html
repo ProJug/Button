@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>The Button</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="/style.css" rel="stylesheet">
+</head>
+<body>
+  <div class="wrap">
+    <h1>The Button</h1>
+    <div class="stats">
+      <div class="total">
+        <div class="total-label">Total Presses</div>
+        <div id="total" class="total-value">0</div>
+      </div>
+      <div class="mine">
+        <div class="mine-label">Your Presses</div>
+        <div id="mine" class="mine-value">0</div>
+      </div>
+    </div>
+
+    <button id="pressBtn" class="press">PRESS</button>
+
+    <div class="name-box">
+      <input id="nameInput" placeholder="Your name (optional)" maxlength="40">
+      <button id="saveName">Save</button>
+      <span id="nameSaved" class="dim"></span>
+    </div>
+
+    <h2>Leaderboard</h2>
+    <ol id="leaderboard"></ol>
+
+    <div id="toast" class="toast" hidden></div>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/client.js"></script>
+</body>
+</html>

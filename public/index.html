@@ -8,7 +8,17 @@
 </head>
 <body>
   <div class="wrap">
-    <h1>The Button</h1>
+    <header class="topbar">
+      <h1>The Button</h1>
+      <nav class="nav">
+        <span id="userArea">
+          <a href="/login.html" id="loginLink">Log in</a>
+          <a href="/signup.html" id="signupLink" class="btn-link">Sign up</a>
+        </span>
+        <button id="logoutBtn" hidden>Log out</button>
+      </nav>
+    </header>
+
     <div class="stats">
       <div class="total">
         <div class="total-label">Total Presses</div>
@@ -20,9 +30,10 @@
       </div>
     </div>
 
-    <button id="pressBtn" class="press">PRESS</button>
+    <button id="pressBtn" class="press" disabled title="Log in to press">PRESS</button>
+    <div class="hint" id="pressHint">Log in to press the button.</div>
 
-    <div class="name-box">
+    <div class="name-box" id="nameBox" hidden>
       <input id="nameInput" placeholder="Your name (optional)" maxlength="40">
       <button id="saveName">Save</button>
       <span id="nameSaved" class="dim"></span>

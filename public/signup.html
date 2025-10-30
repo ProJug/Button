@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Sign up — The Button</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="/style.css" rel="stylesheet">
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+  <div class="wrap auth-wrap card">
+    <h1>Create an account</h1>
+
+    <div class="oauth">
+      <div id="g_id_onload"
+           data-client_id="741839233909-lqomnkqasmbd8bnb6ifuuhl0ubivrnqj.apps.googleusercontent.com"
+           data-context="signup"
+           data-callback="handleGoogleCredential"
+           data-auto_select="false">
+      </div>
+      <div class="g_id_signin"
+           data-type="standard"
+           data-size="large"
+           data-theme="outline"
+           data-text="continue_with"
+           data-shape="rect"
+           data-logo_alignment="left"></div>
+    </div>
+
+    <div class="or"><span>or</span></div>
+
+    <form id="signupForm">
+      <label>Email</label>
+      <input id="email" type="email" required>
+
+      <label>Display name (optional)</label>
+      <input id="displayName" maxlength="40">
+
+      <label>Password</label>
+      <input id="password" type="password" required>
+
+      <button type="submit" class="primary">Sign up</button>
+    </form>
+
+    <p class="muted">
+      Already have an account? <a href="/login.html">Log in</a>
+    </p>
+
+    <div id="msg" class="dim"></div>
+  </div>
+
+  <script>
+    // Fill client_id from env via server injection if you want. For now, set in HTML manually.
+    // window.GOOGLE_CLIENT_ID = "...";
+
+    async function oauthExchange(id_token) {
+      const res = await fetch("/api/oauth/google", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id_token })
+      });
+      const data = await res.json();
+      if (res.ok && data.ok) {
+        window.location = "/";
+      } else {
+        document.getElementById("msg").textContent = data.error || "OAuth failed.";
+      }
+    }
+
+    window.handleGoogleCredential = async ({ credential }) => {
+      if (!credential) return;
+      await oauthExchange(credential);
+    };
+
+    document.getElementById("signupForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("email").value.trim();
+      const display_name = document.getElementById("displayName").value.trim();
+      const password = document.getElementById("password").value;
+
+      const res = await fetch("/api/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password, display_name })
+      });
+      const data = await res.json();
+      const msgEl = document.getElementById("msg");
+      if (res.ok && data.ok) {
+        msgEl.textContent = "Signed up. Redirecting...";
+        setTimeout(() => (window.location = "/"), 700);
+      } else {
+        msgEl.textContent = data.error || "Signup failed.";
+      }
+    });
+  </script>
+</body>
+</html>

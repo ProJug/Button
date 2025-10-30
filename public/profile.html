@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Profile — The Button</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="/style.css" rel="stylesheet">
+</head>
+<body>
+  <div class="wrap auth-wrap card">
+    <h1>Your profile</h1>
+    <div id="profileArea">
+      <div><strong>Email:</strong> <span id="email">—</span></div>
+      <div><strong>Display name:</strong> <span id="displayName">—</span></div>
+      <div style="margin-top:12px;">
+        <button id="toIndex">Back to The Button</button>
+        <button id="logout">Log out</button>
+      </div>
+    </div>
+    <div id="msg" class="dim"></div>
+  </div>
+
+  <script>
+    async function load() {
+      const res = await fetch("/api/me");
+      const data = await res.json();
+      if (!data?.user) {
+        document.getElementById("msg").textContent = "Not logged in.";
+        return;
+      }
+      document.getElementById("email").textContent = data.user.email || "—";
+      document.getElementById("displayName").textContent = data.user.display_name || "—";
+    }
+    document.getElementById("toIndex").addEventListener("click", () => window.location = "/");
+    document.getElementById("logout").addEventListener("click", async () => {
+      await fetch("/api/logout", { method: "POST" });
+      window.location = "/";
+    });
+    load();
+  </script>
+</body>
+</html>
